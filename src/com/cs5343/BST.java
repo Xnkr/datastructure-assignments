@@ -18,6 +18,16 @@ public class BST {
         System.out.println("Inorder traversal of BST after deletion: ");
         inorderTraversal(bst.ROOT);
         System.out.println();
+
+        bst = new BST();
+        bst.createTree();
+        System.out.println("Inorder traversal of BST before deletion using Parent: ");
+        inorderTraversal(bst.ROOT);
+        System.out.println();
+        bst.deleteNodeWithValueUsingParent(bst.ROOT, 100);
+        System.out.println("Inorder traversal of BST after deletion using Parent: ");
+        inorderTraversal(bst.ROOT);
+        System.out.println();
     }
 
     // Deleting node using predecessor
@@ -44,6 +54,38 @@ public class BST {
                     // Delete the predecessor node
                     tree.left = deleteNodeWithValue(tree.left, predecessor.value
                     );
+                }
+            }
+            return tree;
+        }
+    }
+
+    // Deleting node using predecessor
+    private BinarySearchTree deleteNodeWithValueUsingParent(BinarySearchTree tree, int valueToBeDeleted) {
+        if (tree == null) {
+            return null;
+        } else {
+            if (valueToBeDeleted < tree.value){
+                tree.left = deleteNodeWithValue(tree.left, valueToBeDeleted);
+            } else if (valueToBeDeleted > tree.value){
+                tree.right = deleteNodeWithValue(tree.right, valueToBeDeleted);
+            } else {
+                // Value found
+                if (tree.left == null && tree.right == null){
+                    // Case 1: Deleting leaf node
+                    return null;
+                } else if (tree.left == null || tree.right == null) {
+                    // Case 2: Has one child
+                    return tree.left == null ? tree.right : tree.left;
+                } else {
+                    // Case 3: Both children are present. Replace with predecessor value
+                    BinarySearchTree predecessor = findPredecessor(tree.left);
+                    tree.value = predecessor.value;
+                    if (predecessor.parent.right.equals(predecessor)){
+                        predecessor.parent.right = predecessor.left;
+                    } else {
+                        predecessor.parent.left = predecessor.left;
+                    }
                 }
             }
             return tree;
@@ -98,6 +140,7 @@ public class BST {
     }
 
     public class BinarySearchTree {
+        public BinarySearchTree parent;
         private int value;
         private BinarySearchTree left;
         private BinarySearchTree right;
@@ -106,6 +149,7 @@ public class BST {
             this.value = value;
             this.left = left;
             this.right = right;
+            this.parent = parent;
         }
     }
 
