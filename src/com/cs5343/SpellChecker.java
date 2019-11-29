@@ -65,7 +65,7 @@ class Dictionary {
             }
             putVal(word);
         }
-        System.out.println("Collisions: " + collisions);
+        System.out.println("\tCollisions for table size " + tableSize + ": "+ collisions);
     }
 
     private BufferedReader getFileReader() throws FileNotFoundException {
@@ -111,10 +111,12 @@ class Dictionary {
 
     private void rehash() {
         String[] oldTable = Arrays.copyOf(table, tableSize);
+        System.out.println("\tCollisions for table size " + tableSize + ": "+ collisions);
         tableSize = nextPrime(tableSize * 2);
-        System.out.println("Load factor >= 0.5, Increasing table size to " + tableSize);
+        System.out.println("\tLoad factor >= 0.5, Increasing table size to " + tableSize);
         table = new String[tableSize];
         keys = 0;
+        collisions = 0;
         for (String word : oldTable) {
             if (word != null) {
                 putVal(word);
